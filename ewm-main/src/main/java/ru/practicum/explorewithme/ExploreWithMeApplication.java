@@ -3,6 +3,8 @@ package ru.practicum.explorewithme;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import ru.practicum.StatsClient;
 import ru.practicum.dto.EndpointHitDto;
 
+@SpringBootApplication
 public class ExploreWithMeApplication {
 
 	public static void main(String[] args) {
@@ -42,5 +45,7 @@ public class ExploreWithMeApplication {
 				                          "/events/1", false);
 		System.out.println("Test endpoint /stats");
 		System.out.println("Stats client return " + result.getStatusCode());
+
+		SpringApplication.run(ExploreWithMeApplication.class, args);
 	}
 }
