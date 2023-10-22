@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 import ru.practicum.dto.EndpointHitDto;
@@ -36,7 +35,7 @@ public class StatsController {
     }
 
     @PostMapping("/hit")
-    public EndpointHitDto createHit(@RequestBody @Valid EndpointHitDto dto) {
+    public EndpointHitDto createHit(@RequestBody EndpointHitDto dto) {
         log.info("Creating endpointHit {}", dto);
         return statsService.createHit(dto);
     }
