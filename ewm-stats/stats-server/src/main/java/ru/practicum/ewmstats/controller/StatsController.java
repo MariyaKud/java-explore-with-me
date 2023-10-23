@@ -3,16 +3,16 @@ package ru.practicum.ewmstats.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+import ru.practicum.dto.ContextStats;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 
 import ru.practicum.ewmstats.service.StatsService;
-
-import static ru.practicum.ewmstats.model.ContextStats.formatter;
 
 import java.util.List;
 
@@ -25,13 +25,12 @@ public class StatsController {
 
     @GetMapping("/stats")
     public List<ViewStatsDto> getStats(
-            @RequestParam("start") String startData,
-            @RequestParam("end") String endData,
-            @RequestParam(name = "uris", defaultValue = "") String uris,
+            @RequestParam("start") @DateTimeFormat(pattern = ContextStats.pattern) LocalDateTime startData,
+            @RequestParam("end") @DateTimeFormat(pattern = ContextStats.pattern) LocalDateTime endData,
+            @RequestParam(name = "uris", defaultValue = "") List<String> uris,
             @RequestParam(name = "unique", defaultValue = "false")  Boolean unique) {
         log.info("Get all stats start={}, end={} for list uri={}, unique={}", startData, endData, uris, unique);
-        return statsService.getStats(LocalDateTime.parse(startData, formatter),
-                                     LocalDateTime.parse(endData, formatter),  uris, unique);
+        return statsService.getStats(startData, endData, uris, unique);
     }
 
     @PostMapping("/hit")

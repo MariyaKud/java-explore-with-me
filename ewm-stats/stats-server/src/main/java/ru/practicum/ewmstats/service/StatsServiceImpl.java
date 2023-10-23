@@ -10,8 +10,6 @@ import ru.practicum.ewmstats.model.EndpointHit;
 import ru.practicum.ewmstats.repository.EndpointHitRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,13 +21,9 @@ public class StatsServiceImpl implements StatsService {
     private final HitMapper hitMapper;
 
     @Override
-    public List<ViewStatsDto> getStats(LocalDateTime startData, LocalDateTime endData, String uris, Boolean unique) {
-        List<String> urisParam = new ArrayList<>();
-        if (!uris.isBlank()) {
-            String[] parts = uris.split(",");
-            Collections.addAll(urisParam, parts);
-        }
-        return endpointHitRepository.getStats(startData, endData, urisParam, unique);
+    public List<ViewStatsDto> getStats(LocalDateTime startData, LocalDateTime endData,
+                                        List<String> uris, Boolean unique) {
+        return endpointHitRepository.getStats(startData, endData, uris, unique);
     }
 
     @Override

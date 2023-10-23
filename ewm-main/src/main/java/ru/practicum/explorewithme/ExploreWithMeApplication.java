@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import ru.practicum.StatsClient;
 import ru.practicum.dto.EndpointHitDto;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @SpringBootApplication
 public class ExploreWithMeApplication {
 
@@ -41,8 +44,10 @@ public class ExploreWithMeApplication {
             }
         }
 
-		result = statsClient.getStats("2023-09-06 00:00:00", "2023-09-06 23:59:59",
-				                          "/events/1", false);
+		result = statsClient.getStats(LocalDateTime.of(2023, 9, 6, 0, 0, 0),
+			                     	   LocalDateTime.of(2023, 9, 7, 0, 0, 0),
+				                         List.of("/events/1"), false);
+
 		System.out.println("Test endpoint /stats");
 		System.out.println("Stats client return " + result.getStatusCode());
 

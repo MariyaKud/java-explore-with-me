@@ -44,43 +44,30 @@ public class JdbcEndpointHitRepository implements EndpointHitRepository {
     @Override
     public List<ViewStatsDto> getStats(LocalDateTime startData, LocalDateTime endData, List<String> uris, Boolean unique) {
         String sqlQuery;
+        String sqlGroup;
+        String sqlCondition;
+
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("startData", startData);
         map.addValue("endData", endData);
 
-
-        if (uris.isEmpty() && unique) {
-            sqlQuery = "select app, uri, count(DISTINCT ip) as hits " +
-                    "from hits as h " +
-                    "where h.timestamp >= :startData and h.timestamp <= :endData " +
-                    "GROUP BY app, uri " +
-                    "ORDER BY count(*) desc";
-
-        } else if (uris.isEmpty() && !unique) {
-            sqlQuery = "select app, uri, count(*) as hits " +
-                    "from hits as h " +
-                    "where h.timestamp >= :startData and h.timestamp <= :endData " +
-                    "GROUP BY app, uri " +
-                    "ORDER BY count(*) desc";
-
-        } else if (!uris.isEmpty() && unique) {
-            sqlQuery = "select app, uri, count(DISTINCT ip) as hits " +
-                    "from hits as h " +
-                    "where h.timestamp >= :startData and h.timestamp <= :endData and uri in (:uris) " +
-                    "GROUP BY app, uri " +
-                    "ORDER BY count(*) desc";
-
-            map.addValue("uris", uris);
-
+        if (unique) {
+            sqlGroup = "count(DISTINCT ip)";
         } else {
-            sqlQuery = "select app, uri, count(*) as hits " +
-                       "from hits as h " +
-                       "where h.timestamp >= :startData and h.timestamp <= :endData and uri in (:uris) " +
-                       "GROUP BY app, uri " +
-                       "ORDER BY count(*) desc";
-
+            sqlGroup = "count(*)";
+        }
+        if (uris.isEmpty()) {
+            sqlCondition = "";
+        } else {
+            sqlCondition = "and uri in (:uris) ";
             map.addValue("uris", uris);
         }
+
+        sqlQuery = "select app, uri, " + sqlGroup + " as hits " +
+                   "from hits as h " +
+                   "where h.timestamp >= :startData and h.timestamp <= :endData " + sqlCondition +
+                   "GROUP BY app, uri " +
+                   "ORDER BY count(*) desc";
 
         List<ViewStatsDto> viewStatsDtos = new ArrayList<>();
         SqlRowSet rowSet = jdbcOperations.queryForRowSet(sqlQuery, map);

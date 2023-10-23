@@ -10,14 +10,19 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.dto.EndpointHitDto;
 
+import java.time.LocalDateTime;
+
+import java.util.List;
 import java.util.Map;
+
+import static ru.practicum.dto.ContextStats.formatter;
 
 @Service
 public class StatsClient extends BaseClient {
     private static final String API_PREFIX = "";
 
     @Autowired
-    public StatsClient(@Value("http://localhost:9090") String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${serverUrl.path}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
@@ -30,13 +35,14 @@ public class StatsClient extends BaseClient {
         return post("/hit", hitDto);
     }
 
-    public ResponseEntity<Object> getStats(String start, String end, String uris, Boolean unique) {
+    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         Map<String, Object> parameters = Map.of(
-                "start", start,
-                "end", end,
-                "uris", uris,
+                "start", formatter.format(start),
+                "end", formatter.format(end),
+                "uris", String.join(",", uris),
                 "unique", unique
         );
+
         return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
     }
 }

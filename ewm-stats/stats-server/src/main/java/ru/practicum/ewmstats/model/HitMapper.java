@@ -6,11 +6,11 @@ import java.time.LocalDateTime;
 
 import ru.practicum.dto.EndpointHitDto;
 
-import static ru.practicum.ewmstats.model.ContextStats.formatter;
+import static ru.practicum.dto.ContextStats.formatter;
+
 
 @Component
 public class HitMapper {
-
     public EndpointHitDto toDto(EndpointHit endpointHit) {
         return new EndpointHitDto(endpointHit.getId(), endpointHit.getApp(), endpointHit.getUri(),
                                    endpointHit.getIp(), formatter.format(endpointHit.getTimestamp()));
