@@ -20,6 +20,7 @@ public class ExploreWithMeApplication {
 
 	public static void main(String[] args) {
 
+		/*
 		System.out.println("-----------------------");
 		System.out.println("START TEST Stats client");
 
@@ -50,6 +51,7 @@ public class ExploreWithMeApplication {
 
 		System.out.println("Test endpoint /stats");
 		System.out.println("Stats client return " + result.getStatusCode());
+		 */
 
 		SpringApplication.run(ExploreWithMeApplication.class, args);
 	}
