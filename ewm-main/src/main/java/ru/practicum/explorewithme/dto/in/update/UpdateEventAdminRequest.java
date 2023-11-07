@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import ru.practicum.explorewithme.dto.out.inner.LocationDto;
-import ru.practicum.explorewithme.dto.roster.StateActionReview;
+import ru.practicum.explorewithme.dto.out.outshort.LocationDto;
+import ru.practicum.explorewithme.model.enummodel.StateActionReview;
 
 import java.time.LocalDateTime;
 

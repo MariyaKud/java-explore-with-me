@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.ContextStats;
 import ru.practicum.explorewithme.dto.in.update.UpdateEventAdminRequest;
 import ru.practicum.explorewithme.dto.out.EventFullDto;
-import ru.practicum.explorewithme.dto.out.EventShortDto;
+import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
+import ru.practicum.explorewithme.dto.param.AdminEventParam;
+import ru.practicum.explorewithme.service.event.EventService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequestMapping("/admin/events")
 @RequiredArgsConstructor
 public class AdminEventController {
+    private final EventService eventService;
 
     @GetMapping
     public List<EventShortDto> getEvents(@RequestParam(name = "users", defaultValue = "") List<Long> users,
@@ -31,13 +34,22 @@ public class AdminEventController {
                                         @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Get events for users ids {} in states={} and categories={}, start={}, end={}, from={}, size={}",
                    users, states, categories, rangeStart, rangeEnd, from, size);
-        return null;
+
+        AdminEventParam param = AdminEventParam.builder()
+                .users(users)
+                .states(states)
+                .categories(categories)
+                .rangeStart(rangeStart)
+                .rangeEnd(rangeEnd)
+                .build();
+
+        return eventService.getEvents(param, from, size);
     }
 
     @PatchMapping("/{eventId}")
     public EventFullDto updateEvent(@PathVariable Long eventId,
                                     @RequestBody @Valid UpdateEventAdminRequest eventDto) {
         log.info("Patch event with id {}, event {}", eventId, eventDto);
-        return null;
+        return eventService.updateAdminEvent(eventId, eventDto);
     }
 }

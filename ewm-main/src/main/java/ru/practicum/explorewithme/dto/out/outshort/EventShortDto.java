@@ -1,10 +1,10 @@
-package ru.practicum.explorewithme.dto.out;
+package ru.practicum.explorewithme.dto.out.outshort;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import ru.practicum.explorewithme.dto.out.inner.UserShortDto;
+import ru.practicum.explorewithme.dto.out.CategoryDto;
 
 import java.time.LocalDateTime;
 

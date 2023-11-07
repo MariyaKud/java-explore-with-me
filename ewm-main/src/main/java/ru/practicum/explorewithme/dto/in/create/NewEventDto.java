@@ -1,13 +1,15 @@
 package ru.practicum.explorewithme.dto.in.create;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import ru.practicum.explorewithme.dto.out.inner.LocationDto;
-
+import ru.practicum.dto.ContextStats;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Value;
+import ru.practicum.explorewithme.model.Location;
+import ru.practicum.explorewithme.validation.DateAfterTwoHourFromNow;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @Builder
+@DateAfterTwoHourFromNow
 public class NewEventDto {
     @Positive
     private Long id;
@@ -30,8 +33,9 @@ public class NewEventDto {
     @NotBlank
     @Size(min = 20, max = 7000)
     private String description;
+    @JsonFormat(pattern = ContextStats.pattern)
     private LocalDateTime eventDate;
-    private LocationDto location;
+    private Location location;
     @Value("false")
     private Boolean paid;
     @Positive

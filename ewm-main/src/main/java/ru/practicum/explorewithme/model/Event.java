@@ -1,9 +1,7 @@
 package ru.practicum.explorewithme.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import ru.practicum.explorewithme.model.enummodel.EventState;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +26,16 @@ public class Event {
     @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
 
+    @Column(name = "created_on", nullable = false)
+    private LocalDateTime createdOn;
+
+    @Column(name = "published_on")
+    private LocalDateTime publishedOn;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "initiator_id", nullable = false)
+    private User initiator;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
@@ -39,4 +48,8 @@ public class Event {
     private Integer participantLimit;
     @Column(name = "request_moderation", nullable = false)
     private Boolean requestModeration;
+
+    @Column(name = "state_event", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EventState state;
 }

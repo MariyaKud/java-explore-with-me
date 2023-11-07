@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.dto.out;
 
 import lombok.*;
+import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
 
 import java.util.List;
 

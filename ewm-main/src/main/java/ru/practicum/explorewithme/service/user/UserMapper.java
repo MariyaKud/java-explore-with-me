@@ -5,13 +5,22 @@ import ru.practicum.explorewithme.dto.in.create.NewUserRequestDto;
 import ru.practicum.explorewithme.dto.out.UserDto;
 import ru.practicum.explorewithme.model.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class UserMapper {
     public UserDto toDto(User user) {
-        return new UserDto(user.getId(), user.getName());
+        return new UserDto(user.getId(), user.getName(), user.getEmail());
     }
 
     public User fromDto(NewUserRequestDto dto) {
         return new User(null, dto.getName(), dto.getEmail());
+    }
+
+    public List<UserDto> mapToUserDto(Iterable<User> users) {
+        List<UserDto> target = new ArrayList<>();
+        users.forEach(u -> target.add(toDto(u)));
+        return target;
     }
 }

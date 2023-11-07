@@ -1,10 +1,7 @@
 package ru.practicum.explorewithme.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ru.practicum.explorewithme.dto.roster.StatusEventRequest;
+import lombok.*;
+import ru.practicum.explorewithme.model.enummodel.RequestStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +20,7 @@ public class Request {
     private LocalDateTime created;
 
     @Enumerated(EnumType.STRING)
-    private StatusEventRequest status;
+    private RequestStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)

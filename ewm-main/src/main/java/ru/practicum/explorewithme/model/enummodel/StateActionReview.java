@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.dto.roster;
+package ru.practicum.explorewithme.model.enummodel;
 
 public enum StateActionReview {
     SEND_TO_REVIEW,

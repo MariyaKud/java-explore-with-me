@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.dto.ContextStats;
 import ru.practicum.explorewithme.dto.out.EventFullDto;
-import ru.practicum.explorewithme.dto.out.EventShortDto;
+import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;

@@ -1,20 +1,22 @@
 package ru.practicum.explorewithme.dto.out;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import lombok.NoArgsConstructor;
-import ru.practicum.explorewithme.dto.roster.StatusEventRequest;
+import ru.practicum.explorewithme.model.enummodel.RequestStatus;
 
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
+@Builder
 public class ParticipationRequestDto {
     private Long id;
-    private LocalDateTime created;
-    private StatusEventRequest status;
+    private String created;
+    private String status;
     private Long event;
     private Long requester;
 }
