@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.dto.in.create.NewCategoryDto;
 import ru.practicum.explorewithme.dto.out.CategoryDto;
 import ru.practicum.explorewithme.exeption.NotFoundException;
+import ru.practicum.explorewithme.exeption.NotMeetRulesException;
 import ru.practicum.explorewithme.model.Category;
 import ru.practicum.explorewithme.repository.CategoryRepository;
+import ru.practicum.explorewithme.repository.EventRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements AdminCategoryService, PublicCategoryService {
     private final CategoryRepository categoryRepository;
+
+    private final EventRepository eventRepository;
 
     private final CategoryMapper categoryMapper;
 
@@ -44,6 +48,11 @@ public class CategoryServiceImpl implements AdminCategoryService, PublicCategory
     public Boolean deleteCategoryById(long catId) {
         Category category = categoryRepository.findById(catId).orElseThrow(() ->
                                                new NotFoundException(catId, Category.class));
+
+        if (eventRepository.existsByCategoryId(catId)) {
+            throw new NotMeetRulesException(String.format("There are events related to the category with id=%s", catId));
+        }
+
         categoryRepository.delete(category);
         return true;
     }

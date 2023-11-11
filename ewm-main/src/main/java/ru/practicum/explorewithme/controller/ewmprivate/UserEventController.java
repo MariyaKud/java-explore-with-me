@@ -12,8 +12,8 @@ import ru.practicum.explorewithme.dto.out.EventFullDto;
 import ru.practicum.explorewithme.dto.out.EventRequestStatusUpdateResult;
 import ru.practicum.explorewithme.dto.out.ParticipationRequestDto;
 import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
-import ru.practicum.explorewithme.service.event.EventService;
-import ru.practicum.explorewithme.service.request.RequestService;
+import ru.practicum.explorewithme.service.event.PrivateEventService;
+import ru.practicum.explorewithme.service.request.PrivateRequestService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,9 +23,9 @@ import java.util.List;
 @RequestMapping("/users/{userId}/events")
 @RequiredArgsConstructor
 public class UserEventController {
-    private final EventService eventService;
+    private final PrivateEventService eventService;
 
-    private final RequestService requestService;
+    private final PrivateRequestService requestService;
 
     @GetMapping
     public List<EventShortDto> getUserEvents(@PathVariable Long userId,
@@ -40,7 +40,7 @@ public class UserEventController {
     public EventFullDto createUserEvent(@PathVariable Long userId,
                                          @RequestBody @Valid NewEventDto newEventDto) {
         log.info("User by id {} creating new event {}", userId, newEventDto);
-        return eventService.createEvent(userId,newEventDto);
+        return eventService.createUserEvent(userId, newEventDto);
     }
 
     @GetMapping("/{eventId}")

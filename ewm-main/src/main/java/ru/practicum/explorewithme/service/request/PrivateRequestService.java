@@ -6,7 +6,7 @@ import ru.practicum.explorewithme.dto.out.ParticipationRequestDto;
 
 import java.util.List;
 
-public interface RequestService {
+public interface PrivateRequestService {
 
     /**
      * Добавление от текущего пользователя на участие в событии
@@ -44,7 +44,7 @@ public interface RequestService {
      * @return 200 Заявка отменена
      * 404 Запрос не найден или недоступен
      */
-    Boolean cancelUserRequest(Long userId, Long requestId);
+    ParticipationRequestDto cancelUserRequest(Long userId, Long requestId);
 
     /**
      * Получение информации о запросах на участие в событии текущего пользователя

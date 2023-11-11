@@ -14,7 +14,23 @@ import java.util.Set;
 @NoArgsConstructor(force = true)
 public class UpdateCompilationRequest {
     private Set<Long> events;
-    private boolean pinned;
+    private Boolean pinned;
     @Size(min = 1, max = 50)
     private String title;
+
+    public boolean isSomeChange() {
+        return isEvents() || isPinned() || isTittle();
+    }
+
+    public boolean isEvents() {
+        return events != null && !events.isEmpty();
+    }
+
+    public boolean isTittle() {
+        return title != null && !title.isEmpty();
+    }
+
+    public boolean isPinned() {
+        return pinned != null;
+    }
 }

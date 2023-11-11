@@ -1,10 +1,9 @@
 package ru.practicum.explorewithme.service.user;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.dto.in.create.NewUserRequestDto;
 import ru.practicum.explorewithme.dto.out.UserDto;
@@ -18,11 +17,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements AdminUserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
-
 
     @Override
     @Transactional
@@ -43,10 +41,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> getUsers(List<Long> ids, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from > 0 ? from  / size : 0, size, Sort.by("id"));
+        Pageable pageable = PageRequest.of(from > 0 ? from  / size : 0, size);
 
-        BooleanExpression byUserIds = QUser.user.id.in(ids);
-        Iterable<User> foundUsers = userRepository.findAll(byUserIds,pageable);
+        BooleanBuilder builder = new BooleanBuilder();
+        if (!ids.isEmpty()) {
+            builder.and(QUser.user.id.in(ids));
+        }
+        Iterable<User> foundUsers = userRepository.findAll(builder, pageable);
         return userMapper.mapToUserDto(foundUsers);
     }
 }

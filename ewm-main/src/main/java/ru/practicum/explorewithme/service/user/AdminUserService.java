@@ -5,7 +5,7 @@ import ru.practicum.explorewithme.dto.out.UserDto;
 
 import java.util.List;
 
-public interface UserService {
+public interface AdminUserService {
 
     /**
      * Добавление нового пользователя

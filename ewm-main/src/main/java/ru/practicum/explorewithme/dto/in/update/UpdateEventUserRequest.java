@@ -1,26 +1,77 @@
 package ru.practicum.explorewithme.dto.in.update;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import ru.practicum.explorewithme.dto.out.outshort.LocationDto;
-import ru.practicum.explorewithme.model.enummodel.StateActionReview;
+import ru.practicum.dto.ContextStats;
+import ru.practicum.explorewithme.model.Location;
+import ru.practicum.explorewithme.model.enummodel.EventStateActionUser;
+import ru.practicum.explorewithme.validation.DateAfterTwoHourFromNow;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateEventUserRequest {
+public class UpdateEventUserRequest implements UpdateEventDto {
+    private EventStateActionUser stateAction;
+    @Size(min = 20, max = 2000)
     private String annotation;
-    private Integer category;
+    @Positive
+    private Long category;
+    @Size(min = 20, max = 7000)
     private String description;
+    @JsonFormat(pattern = ContextStats.pattern)
     private LocalDateTime eventDate;
-    private LocationDto location;
+    private Location location;
     private Boolean paid;
     private Integer participantLimit;
     private Boolean requestModeration;
-    private StateActionReview stateAction;
+    @Size(min = 3, max = 120)
     private String title;
+
+    public boolean isStateAction() {
+        return stateAction != null;
+    }
+    public boolean isAnnotation() {
+        return annotation != null;
+    }
+
+    public boolean isCategory() {
+        return category != null;
+    }
+
+    public boolean isDescription() {
+        return description != null;
+    }
+
+    public boolean isPaid() {
+        return paid != null;
+    }
+
+    public boolean isParticipantLimit() {
+        return participantLimit != null;
+    }
+
+    public boolean isRequestModeration() {
+        return requestModeration != null;
+    }
+
+    public boolean isTitle() {
+        return title != null;
+    }
+
+    public boolean isEventDate() {
+        return eventDate != null;
+    }
+
+    public boolean isLocation() {
+        return location != null;
+    }
 }

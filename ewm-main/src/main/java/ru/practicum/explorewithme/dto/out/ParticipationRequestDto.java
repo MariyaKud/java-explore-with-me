@@ -3,11 +3,7 @@ package ru.practicum.explorewithme.dto.out;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
 import lombok.NoArgsConstructor;
-import ru.practicum.explorewithme.model.enummodel.RequestStatus;
-
-import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor

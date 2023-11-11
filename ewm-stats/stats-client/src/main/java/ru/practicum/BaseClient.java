@@ -1,10 +1,13 @@
 package ru.practicum;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import ru.practicum.dto.ViewStatsDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +22,21 @@ public class BaseClient {
         return makeAndSendRequest(HttpMethod.POST, path, null, body);
     }
 
-    protected ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters) {
-        return makeAndSendRequest(HttpMethod.GET, path, parameters, null);
+    protected ResponseEntity<List<ViewStatsDto>> get(String path) {
+        return makeAndSendRequestList(HttpMethod.GET, path);
+    }
+
+    private ResponseEntity<List<ViewStatsDto>> makeAndSendRequestList(HttpMethod method, String path) {
+        HttpEntity<?> requestEntity = new HttpEntity<>(defaultHeaders());
+
+        ResponseEntity<List<ViewStatsDto>> statsServerResponse;
+        try {
+            statsServerResponse = rest.exchange(path, method, requestEntity,
+                    new ParameterizedTypeReference<List<ViewStatsDto>>() {});
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(new ArrayList<>());
+        }
+        return statsServerResponse;
     }
 
     private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path,

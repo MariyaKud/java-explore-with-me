@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.dto.out.UserDto;
 import ru.practicum.explorewithme.dto.in.create.NewUserRequestDto;
-import ru.practicum.explorewithme.service.user.UserService;
+import ru.practicum.explorewithme.service.user.AdminUserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,7 +18,14 @@ import java.util.List;
 @RequestMapping("/admin/users")
 @RequiredArgsConstructor
 public class AdminUserController {
-    private final UserService userService;
+    private final AdminUserService userService;
+
+    @PostMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public UserDto createUser(@RequestBody @Valid NewUserRequestDto userDto) {
+        log.info("Creating new user {}", userDto);
+        return userService.createUser(userDto);
+    }
 
     @GetMapping
     public List<UserDto> getUsers(@RequestParam(name = "ids", defaultValue = "") List<Long> ids,
@@ -26,13 +33,6 @@ public class AdminUserController {
                                   @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Get users by ids {}, from={}, size={}", ids, from, size);
         return userService.getUsers(ids, from, size);
-    }
-
-    @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public UserDto createUser(@RequestBody @Valid NewUserRequestDto userDto) {
-        log.info("Creating new user {}", userDto);
-        return userService.createUser(userDto);
     }
 
     @DeleteMapping("/{userId}")

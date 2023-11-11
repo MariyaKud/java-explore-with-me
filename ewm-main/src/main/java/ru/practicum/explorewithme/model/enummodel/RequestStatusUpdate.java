@@ -1,8 +1,6 @@
 package ru.practicum.explorewithme.model.enummodel;
 
-public enum RequestStatus {
+public enum RequestStatusUpdate {
     CONFIRMED,
-    PENDING,
-    REJECTED,
-    CANCELED
+    REJECTED
 }
