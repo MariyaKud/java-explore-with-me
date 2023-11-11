@@ -1,6 +1,5 @@
 package ru.practicum.explorewithme.exeption;
 
-import java.util.List;
 import java.util.Set;
 
 public class NotFoundListException extends RuntimeException {

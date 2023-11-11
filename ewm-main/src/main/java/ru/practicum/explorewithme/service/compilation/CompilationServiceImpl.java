@@ -28,6 +28,7 @@ public class CompilationServiceImpl implements AdminCompilationService, PublicCo
     private final EventRepository eventRepository;
 
     private final CompilationMapper compilationMapper;
+
     @Override
     @Transactional
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {

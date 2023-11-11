@@ -30,10 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.service.client.StatsAgent;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -314,7 +311,6 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
                 start[0] = u.getCreatedOn();
             }
         });
-
         data.setViews(statsAgent.getStatsByEventIds(eventIds, start[0], LocalDateTime.now()));
 
         Map<Long, Integer> confirmRequests = new HashMap<>();

@@ -10,9 +10,7 @@ import ru.practicum.explorewithme.dto.out.outshort.LocationDto;
 import ru.practicum.explorewithme.dto.out.outshort.UserShortDto;
 import ru.practicum.explorewithme.model.Event;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ru.practicum.dto.ContextStats.formatter;
 
@@ -67,7 +65,7 @@ public class EventMapper {
     }
 
     public List<EventShortDto> mapToEventDto(Iterable<Event> events, Map<Long, Integer> viewsEvents,
-                                             Map<Long, Integer> confirmRequests, boolean isOnlyAvailable) {
+                                            Map<Long, Integer> confirmRequests, boolean isOnlyAvailable) {
         List<EventShortDto> target = new ArrayList<>();
         events.forEach(u -> {
             EventShortDto eventShortDto = toShortDto(u, viewsEvents.getOrDefault(u.getId(), 0),

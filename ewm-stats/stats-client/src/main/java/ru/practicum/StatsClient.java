@@ -34,10 +34,11 @@ public class StatsClient extends BaseClient {
 
     @Transactional
     public ResponseEntity<Object> createHit(EndpointHitDto hitDto) {
-        return post("/hit", hitDto);
+        return post(hitDto);
     }
 
-    public ResponseEntity<List<ViewStatsDto>> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+    public ResponseEntity<List<ViewStatsDto>> getStats(LocalDateTime start, LocalDateTime end,
+                                                       List<String> uris, Boolean unique) {
 
         StringBuilder uriBuilder = new StringBuilder();
         uriBuilder.append("/stats?start=").append(formatter.format(start));

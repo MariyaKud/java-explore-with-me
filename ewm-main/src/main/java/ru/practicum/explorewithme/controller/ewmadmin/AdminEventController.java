@@ -27,12 +27,12 @@ public class AdminEventController {
 
     @GetMapping
     public List<EventFullDto> getEvents(@RequestParam(name = "users", defaultValue = "") List<Long> users,
-                                        @RequestParam(name = "states", defaultValue = "") List<String> states,
-                                        @RequestParam(name = "categories", defaultValue = "") List<Long> categories,
-                                        @RequestParam(name = "rangeStart", defaultValue = "") String rangeStart,
-                                        @RequestParam(name = "rangeEnd", defaultValue = "") String rangeEnd,
-                                        @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                        @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                       @RequestParam(name = "states", defaultValue = "") List<String> states,
+                                       @RequestParam(name = "categories", defaultValue = "") List<Long> categories,
+                                       @RequestParam(name = "rangeStart", defaultValue = "") String rangeStart,
+                                       @RequestParam(name = "rangeEnd", defaultValue = "") String rangeEnd,
+                                       @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                       @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Get events for users ids {} in states={} and categories={}, start={}, end={}, from={}, size={}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
 

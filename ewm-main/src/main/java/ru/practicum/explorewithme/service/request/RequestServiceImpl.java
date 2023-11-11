@@ -159,6 +159,7 @@ public class RequestServiceImpl implements PrivateRequestService {
                 break;
             }
         }
+
         result.setRejectedRequests(rejectedRequests);
         result.setConfirmedRequests(confirmedRequests);
 

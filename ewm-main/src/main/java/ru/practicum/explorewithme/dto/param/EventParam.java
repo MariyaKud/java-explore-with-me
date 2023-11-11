@@ -39,6 +39,7 @@ public class EventParam {
     public boolean isOnlyAvailable() {
         return onlyAvailable != null;
     }
+
     public boolean isRangeStart() {
         return rangeStart != null;
     }

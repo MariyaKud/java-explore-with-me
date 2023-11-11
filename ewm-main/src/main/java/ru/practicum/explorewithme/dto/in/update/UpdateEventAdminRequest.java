@@ -9,8 +9,6 @@ import ru.practicum.dto.ContextStats;
 import ru.practicum.explorewithme.model.Location;
 import ru.practicum.explorewithme.model.enummodel.EventStateActionAdmin;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 

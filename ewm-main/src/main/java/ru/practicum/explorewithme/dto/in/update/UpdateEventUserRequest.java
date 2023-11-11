@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.dto.ContextStats;
 import ru.practicum.explorewithme.model.Location;
 import ru.practicum.explorewithme.model.enummodel.EventStateActionUser;
-import ru.practicum.explorewithme.validation.DateAfterTwoHourFromNow;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -39,6 +36,7 @@ public class UpdateEventUserRequest implements UpdateEventDto {
     public boolean isStateAction() {
         return stateAction != null;
     }
+
     public boolean isAnnotation() {
         return annotation != null;
     }
