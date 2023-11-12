@@ -2,12 +2,12 @@ package ru.practicum.explorewithme.service.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.explorewithme.dto.in.create.NewEventDto;
-import ru.practicum.explorewithme.dto.out.CategoryDto;
-import ru.practicum.explorewithme.dto.out.EventFullDto;
-import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
-import ru.practicum.explorewithme.dto.out.outshort.LocationDto;
-import ru.practicum.explorewithme.dto.out.outshort.UserShortDto;
+import ru.practicum.explorewithme.dto.input.create.NewEventDto;
+import ru.practicum.explorewithme.dto.output.CategoryDto;
+import ru.practicum.explorewithme.dto.output.EventFullDto;
+import ru.practicum.explorewithme.dto.output.outshort.EventShortDto;
+import ru.practicum.explorewithme.dto.output.outshort.LocationDto;
+import ru.practicum.explorewithme.dto.output.outshort.UserShortDto;
 import ru.practicum.explorewithme.model.Event;
 
 import java.util.*;

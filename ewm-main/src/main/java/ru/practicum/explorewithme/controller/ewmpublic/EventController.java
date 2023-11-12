@@ -7,8 +7,8 @@ import org.checkerframework.checker.index.qual.Positive;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.explorewithme.service.client.StatsAgent;
-import ru.practicum.explorewithme.dto.out.EventFullDto;
-import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
+import ru.practicum.explorewithme.dto.output.EventFullDto;
+import ru.practicum.explorewithme.dto.output.outshort.EventShortDto;
 import ru.practicum.explorewithme.dto.param.EventParam;
 import ru.practicum.explorewithme.model.enummodel.EventSort;
 import ru.practicum.explorewithme.service.event.PublicEventService;

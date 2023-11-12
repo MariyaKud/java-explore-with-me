@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.index.qual.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.dto.out.UserDto;
-import ru.practicum.explorewithme.dto.in.create.NewUserRequestDto;
+import ru.practicum.explorewithme.dto.output.UserDto;
+import ru.practicum.explorewithme.dto.input.create.NewUserRequestDto;
 import ru.practicum.explorewithme.service.user.AdminUserService;
 
 import javax.validation.Valid;

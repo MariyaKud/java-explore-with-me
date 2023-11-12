@@ -12,12 +12,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import ru.practicum.explorewithme.dto.in.create.NewEventDto;
-import ru.practicum.explorewithme.dto.in.update.UpdateEventAdminRequest;
-import ru.practicum.explorewithme.dto.in.update.UpdateEventDto;
-import ru.practicum.explorewithme.dto.in.update.UpdateEventUserRequest;
-import ru.practicum.explorewithme.dto.out.EventFullDto;
-import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
+import ru.practicum.explorewithme.dto.input.create.NewEventDto;
+import ru.practicum.explorewithme.dto.input.update.UpdateEventAdminRequest;
+import ru.practicum.explorewithme.dto.input.update.UpdateEventDto;
+import ru.practicum.explorewithme.dto.input.update.UpdateEventUserRequest;
+import ru.practicum.explorewithme.dto.output.EventFullDto;
+import ru.practicum.explorewithme.dto.output.outshort.EventShortDto;
 import ru.practicum.explorewithme.dto.param.AdminEventParam;
 import ru.practicum.explorewithme.dto.param.EventParam;
 import ru.practicum.explorewithme.exeption.NotFoundException;

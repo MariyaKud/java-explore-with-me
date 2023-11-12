@@ -1,7 +1,7 @@
 package ru.practicum.explorewithme.service.event;
 
-import ru.practicum.explorewithme.dto.out.EventFullDto;
-import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
+import ru.practicum.explorewithme.dto.output.EventFullDto;
+import ru.practicum.explorewithme.dto.output.outshort.EventShortDto;
 import ru.practicum.explorewithme.dto.param.EventParam;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.dto.in.update;
+package ru.practicum.explorewithme.dto.input.update;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

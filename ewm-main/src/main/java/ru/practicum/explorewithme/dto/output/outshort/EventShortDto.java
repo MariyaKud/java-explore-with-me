@@ -1,11 +1,11 @@
-package ru.practicum.explorewithme.dto.out.outshort;
+package ru.practicum.explorewithme.dto.output.outshort;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import ru.practicum.explorewithme.dto.out.CategoryDto;
+import ru.practicum.explorewithme.dto.output.CategoryDto;
 
 @Getter
 @AllArgsConstructor

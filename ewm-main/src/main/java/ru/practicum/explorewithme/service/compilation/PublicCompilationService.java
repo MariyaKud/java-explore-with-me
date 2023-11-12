@@ -1,6 +1,6 @@
 package ru.practicum.explorewithme.service.compilation;
 
-import ru.practicum.explorewithme.dto.out.CompilationDto;
+import ru.practicum.explorewithme.dto.output.CompilationDto;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package ru.practicum.explorewithme.service.category;
 
-import ru.practicum.explorewithme.dto.in.create.NewCategoryDto;
-import ru.practicum.explorewithme.dto.out.CategoryDto;
+import ru.practicum.explorewithme.dto.input.create.NewCategoryDto;
+import ru.practicum.explorewithme.dto.output.CategoryDto;
 
 public interface AdminCategoryService {
 

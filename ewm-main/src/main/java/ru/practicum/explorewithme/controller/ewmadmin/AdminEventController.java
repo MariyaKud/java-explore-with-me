@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.index.qual.Positive;
 import org.springframework.web.bind.annotation.*;
 
-import ru.practicum.explorewithme.dto.in.update.UpdateEventAdminRequest;
-import ru.practicum.explorewithme.dto.out.EventFullDto;
+import ru.practicum.explorewithme.dto.input.update.UpdateEventAdminRequest;
+import ru.practicum.explorewithme.dto.output.EventFullDto;
 import ru.practicum.explorewithme.dto.param.AdminEventParam;
 import ru.practicum.explorewithme.model.enummodel.EventState;
 import ru.practicum.explorewithme.service.event.AdminEventService;

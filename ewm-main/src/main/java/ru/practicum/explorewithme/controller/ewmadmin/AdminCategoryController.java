@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import ru.practicum.explorewithme.dto.out.CategoryDto;
-import ru.practicum.explorewithme.dto.in.create.NewCategoryDto;
+import ru.practicum.explorewithme.dto.output.CategoryDto;
+import ru.practicum.explorewithme.dto.input.create.NewCategoryDto;
 import ru.practicum.explorewithme.service.category.AdminCategoryService;
 
 import javax.validation.Valid;

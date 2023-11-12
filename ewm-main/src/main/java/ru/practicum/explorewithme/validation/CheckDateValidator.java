@@ -1,6 +1,6 @@
 package ru.practicum.explorewithme.validation;
 
-import ru.practicum.explorewithme.dto.in.create.NewEventDto;
+import ru.practicum.explorewithme.dto.input.create.NewEventDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

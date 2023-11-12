@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.dto.in.update;
+package ru.practicum.explorewithme.dto.input.update;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -7,20 +7,18 @@ import lombok.NoArgsConstructor;
 
 import ru.practicum.dto.ContextStats;
 import ru.practicum.explorewithme.model.Location;
-import ru.practicum.explorewithme.model.enummodel.EventStateActionUser;
+import ru.practicum.explorewithme.model.enummodel.EventStateActionAdmin;
 
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateEventUserRequest implements UpdateEventDto {
-    private EventStateActionUser stateAction;
+public class UpdateEventAdminRequest implements UpdateEventDto {
+    private EventStateActionAdmin stateAction;
     @Size(min = 20, max = 2000)
     private String annotation;
-    @Positive
     private Long category;
     @Size(min = 20, max = 7000)
     private String description;
@@ -33,12 +31,8 @@ public class UpdateEventUserRequest implements UpdateEventDto {
     @Size(min = 3, max = 120)
     private String title;
 
-    public boolean isStateAction() {
-        return stateAction != null;
-    }
-
     public boolean isAnnotation() {
-        return annotation != null;
+       return annotation != null;
     }
 
     public boolean isCategory() {

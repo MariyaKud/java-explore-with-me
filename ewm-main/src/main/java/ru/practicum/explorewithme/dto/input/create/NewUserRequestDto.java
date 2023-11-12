@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.dto.in.create;
+package ru.practicum.explorewithme.dto.input.create;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

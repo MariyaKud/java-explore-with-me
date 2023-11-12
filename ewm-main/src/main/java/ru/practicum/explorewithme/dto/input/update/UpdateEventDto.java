@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.dto.in.update;
+package ru.practicum.explorewithme.dto.input.update;
 
 import ru.practicum.explorewithme.model.Location;
 

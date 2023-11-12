@@ -1,7 +1,7 @@
 package ru.practicum.explorewithme.service.request;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.explorewithme.dto.out.ParticipationRequestDto;
+import ru.practicum.explorewithme.dto.output.ParticipationRequestDto;
 import ru.practicum.explorewithme.model.Request;
 
 import static ru.practicum.dto.ContextStats.formatter;

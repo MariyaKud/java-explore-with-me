@@ -2,9 +2,9 @@ package ru.practicum.explorewithme.service.compilation;
 
 import lombok.*;
 import org.springframework.stereotype.Component;
-import ru.practicum.explorewithme.dto.in.create.NewCompilationDto;
-import ru.practicum.explorewithme.dto.out.CompilationDto;
-import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
+import ru.practicum.explorewithme.dto.input.create.NewCompilationDto;
+import ru.practicum.explorewithme.dto.output.CompilationDto;
+import ru.practicum.explorewithme.dto.output.outshort.EventShortDto;
 import ru.practicum.explorewithme.model.Compilation;
 import ru.practicum.explorewithme.model.Event;
 import ru.practicum.explorewithme.model.QRequest;

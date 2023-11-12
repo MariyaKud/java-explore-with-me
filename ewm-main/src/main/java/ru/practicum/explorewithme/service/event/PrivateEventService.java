@@ -1,9 +1,9 @@
 package ru.practicum.explorewithme.service.event;
 
-import ru.practicum.explorewithme.dto.in.create.NewEventDto;
-import ru.practicum.explorewithme.dto.in.update.UpdateEventUserRequest;
-import ru.practicum.explorewithme.dto.out.EventFullDto;
-import ru.practicum.explorewithme.dto.out.outshort.EventShortDto;
+import ru.practicum.explorewithme.dto.input.create.NewEventDto;
+import ru.practicum.explorewithme.dto.input.update.UpdateEventUserRequest;
+import ru.practicum.explorewithme.dto.output.EventFullDto;
+import ru.practicum.explorewithme.dto.output.outshort.EventShortDto;
 
 import java.util.List;
 

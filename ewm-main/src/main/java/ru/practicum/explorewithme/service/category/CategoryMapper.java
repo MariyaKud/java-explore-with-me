@@ -1,8 +1,8 @@
 package ru.practicum.explorewithme.service.category;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.explorewithme.dto.in.create.NewCategoryDto;
-import ru.practicum.explorewithme.dto.out.CategoryDto;
+import ru.practicum.explorewithme.dto.input.create.NewCategoryDto;
+import ru.practicum.explorewithme.dto.output.CategoryDto;
 import ru.practicum.explorewithme.model.Category;
 
 @Component

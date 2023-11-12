@@ -1,9 +1,9 @@
-package ru.practicum.explorewithme.dto.out;
+package ru.practicum.explorewithme.dto.output;
 
 import lombok.*;
 
-import ru.practicum.explorewithme.dto.out.outshort.LocationDto;
-import ru.practicum.explorewithme.dto.out.outshort.UserShortDto;
+import ru.practicum.explorewithme.dto.output.outshort.LocationDto;
+import ru.practicum.explorewithme.dto.output.outshort.UserShortDto;
 import ru.practicum.explorewithme.model.enummodel.EventState;
 
 import java.time.LocalDateTime;

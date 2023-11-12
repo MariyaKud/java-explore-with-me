@@ -1,8 +1,8 @@
 package ru.practicum.explorewithme.service.user;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.explorewithme.dto.in.create.NewUserRequestDto;
-import ru.practicum.explorewithme.dto.out.UserDto;
+import ru.practicum.explorewithme.dto.input.create.NewUserRequestDto;
+import ru.practicum.explorewithme.dto.output.UserDto;
 import ru.practicum.explorewithme.model.User;
 
 import java.util.ArrayList;

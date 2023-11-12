@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.checkerframework.checker.index.qual.Positive;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.dto.out.CategoryDto;
+import ru.practicum.explorewithme.dto.output.CategoryDto;
 import ru.practicum.explorewithme.service.category.PublicCategoryService;
 
 import java.util.List;

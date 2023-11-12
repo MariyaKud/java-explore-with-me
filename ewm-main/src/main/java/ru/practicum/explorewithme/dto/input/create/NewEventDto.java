@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.dto.in.create;
+package ru.practicum.explorewithme.dto.input.create;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
