@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ExploreWithMeApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(ExploreWithMeApplication.class, args);
 	}
 }
