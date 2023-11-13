@@ -22,7 +22,7 @@ import ru.practicum.dto.param.AdminEventParam;
 import ru.practicum.dto.param.EventParam;
 import ru.practicum.exeption.NotFoundException;
 import ru.practicum.exeption.NotMeetRulesException;
-import ru.practicum.explorewithme.model.*;
+import ru.practicum.model.*;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.StatsAgent;

@@ -7,7 +7,7 @@ import ru.practicum.dto.output.CompilationDto;
 import ru.practicum.dto.output.outshort.EventShortDto;
 import ru.practicum.model.Compilation;
 import ru.practicum.model.Event;
-import ru.practicum.explorewithme.model.QRequest;
+import ru.practicum.model.QRequest;
 import ru.practicum.model.enummodel.RequestStatus;
 import ru.practicum.repository.RequestRepository;
 import ru.practicum.client.StatsAgent;

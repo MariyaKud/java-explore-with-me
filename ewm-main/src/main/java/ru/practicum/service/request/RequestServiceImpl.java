@@ -9,7 +9,7 @@ import ru.practicum.dto.output.ParticipationRequestDto;
 import ru.practicum.exeption.NotFoundException;
 import ru.practicum.exeption.NotFoundListException;
 import ru.practicum.exeption.NotMeetRulesException;
-import ru.practicum.explorewithme.model.*;
+import ru.practicum.model.*;
 import ru.practicum.model.Event;
 import ru.practicum.model.Request;
 import ru.practicum.model.User;

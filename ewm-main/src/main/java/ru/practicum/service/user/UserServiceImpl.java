@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.dto.input.create.NewUserRequestDto;
 import ru.practicum.dto.output.UserDto;
 import ru.practicum.exeption.NotFoundException;
-import ru.practicum.explorewithme.model.QUser;
+import ru.practicum.model.QUser;
 import ru.practicum.model.User;
 import ru.practicum.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
