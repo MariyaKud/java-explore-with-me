@@ -28,7 +28,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{catId}")
-    public CategoryDto findByIdCategory(@PositiveOrZero @PathVariable Long catId) {
+    public CategoryDto findByIdCategory(@Positive @PathVariable Long catId) {
         log.info("Find category by id {}", catId);
         return categoryService.findByIdCategory(catId);
     }

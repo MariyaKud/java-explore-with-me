@@ -77,7 +77,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public EventFullDto findByIdEvent(@PositiveOrZero @PathVariable Long id, HttpServletRequest request) {
+    public EventFullDto findByIdEvent(@Positive @PathVariable Long id, HttpServletRequest request) {
         log.info("Find event by id {}", id);
         log.info("client ip: {}", request.getRemoteAddr());
         log.info("endpoint path: {}", request.getRequestURI());

@@ -12,7 +12,7 @@ import ru.practicum.dto.output.CompilationDto;
 import ru.practicum.service.compilation.AdminCompilationService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Positive;
 
 @Slf4j
 @RestController
@@ -30,7 +30,7 @@ public class AdminCompilationController {
     }
 
     @PatchMapping("/{compId}")
-    public CompilationDto updateCompilation(@PositiveOrZero @PathVariable Long compId,
+    public CompilationDto updateCompilation(@Positive @PathVariable Long compId,
                                             @RequestBody @Valid UpdateCompilationRequest compilationDto) {
         log.info("Patch compilation with id {}, compilation {}", compId, compilationDto);
         return compilationService.updateCompilationById(compId, compilationDto);
@@ -38,7 +38,7 @@ public class AdminCompilationController {
 
     @DeleteMapping("/{compId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public Boolean deleteCompilation(@PositiveOrZero @PathVariable Long compId) {
+    public Boolean deleteCompilation(@Positive @PathVariable Long compId) {
         log.info("Delete compilation by id {}", compId);
         return compilationService.deleteCompilationById(compId);
     }

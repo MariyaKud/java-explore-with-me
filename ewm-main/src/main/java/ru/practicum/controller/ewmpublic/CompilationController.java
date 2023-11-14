@@ -32,7 +32,7 @@ public class CompilationController {
     }
 
     @GetMapping("/{compId}")
-    public CompilationDto findByIdCompilation(@PositiveOrZero @PathVariable Long compId) {
+    public CompilationDto findByIdCompilation(@Positive @PathVariable Long compId) {
         log.info("Find compilation by id {}", compId);
         return compilationService.findCompilationById(compId);
     }
