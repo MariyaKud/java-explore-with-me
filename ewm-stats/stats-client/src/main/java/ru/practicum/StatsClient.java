@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ViewStatsDto;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 import java.util.List;
-import java.util.Map;
 
 import static ru.practicum.dto.ContextStats.formatter;
 
@@ -22,7 +23,7 @@ public class StatsClient extends BaseClient {
     private static final String API_PREFIX = "";
 
     @Autowired
-    public StatsClient(@Value("${serverUrl.path}") String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${ewm-stats-service.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
@@ -31,18 +32,22 @@ public class StatsClient extends BaseClient {
         );
     }
 
+    @Transactional
     public ResponseEntity<Object> createHit(EndpointHitDto hitDto) {
-        return post("/hit", hitDto);
+        return post(hitDto);
     }
 
-    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        Map<String, Object> parameters = Map.of(
-                "start", formatter.format(start),
-                "end", formatter.format(end),
-                "uris", String.join(",", uris),
-                "unique", unique
-        );
+    public ResponseEntity<List<ViewStatsDto>> getStats(LocalDateTime start, LocalDateTime end,
+                                                       List<String> uris, Boolean unique) {
 
-        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+        StringBuilder uriBuilder = new StringBuilder();
+        uriBuilder.append("/stats?start=").append(formatter.format(start));
+        uriBuilder.append("&end=").append(formatter.format(end));
+        for (String s : uris) {
+            uriBuilder.append("&uris=").append(s);
+        }
+        uriBuilder.append("&unique=").append(unique);
+
+        return get(uriBuilder.toString());
     }
 }

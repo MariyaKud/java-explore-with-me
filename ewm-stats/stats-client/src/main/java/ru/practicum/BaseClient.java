@@ -1,12 +1,15 @@
 package ru.practicum;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ViewStatsDto;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 public class BaseClient {
     protected final RestTemplate rest;
@@ -15,28 +18,32 @@ public class BaseClient {
         this.rest = rest;
     }
 
-    protected <T> ResponseEntity<Object> post(String path, T body) {
-        return makeAndSendRequest(HttpMethod.POST, path, null, body);
+    protected ResponseEntity<List<ViewStatsDto>> get(String path) {
+        HttpEntity<?> requestEntity = new HttpEntity<>(defaultHeaders());
+
+        ResponseEntity<List<ViewStatsDto>> statsServerResponse;
+        try {
+            statsServerResponse = rest.exchange(path, HttpMethod.GET, requestEntity,
+                    new ParameterizedTypeReference<>() {
+                    });
+
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(new ArrayList<>());
+        }
+
+        return statsServerResponse;
     }
 
-    protected ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters) {
-        return makeAndSendRequest(HttpMethod.GET, path, parameters, null);
-    }
-
-    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path,
-                                                          @Nullable Map<String, Object> parameters, @Nullable T body) {
-        HttpEntity<T> requestEntity = new HttpEntity<>(body, defaultHeaders());
+    protected ResponseEntity<Object> post(EndpointHitDto body) {
+        HttpEntity<EndpointHitDto> requestEntity = new HttpEntity<>(body, defaultHeaders());
 
         ResponseEntity<Object> statsServerResponse;
         try {
-            if (parameters != null) {
-                statsServerResponse = rest.exchange(path, method, requestEntity, Object.class, parameters);
-            } else {
-                statsServerResponse = rest.exchange(path, method, requestEntity, Object.class);
-            }
+            statsServerResponse = rest.exchange("/hit", HttpMethod.POST, requestEntity, Object.class);
         } catch (HttpStatusCodeException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());
         }
+
         return prepareGatewayResponse(statsServerResponse);
     }
 
