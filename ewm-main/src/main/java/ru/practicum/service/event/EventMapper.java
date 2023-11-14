@@ -1,7 +1,10 @@
 package ru.practicum.service.event;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
+import ru.practicum.client.StatsAgent;
 import ru.practicum.dto.input.create.NewEventDto;
 import ru.practicum.dto.output.CategoryDto;
 import ru.practicum.dto.output.EventFullDto;
@@ -9,7 +12,11 @@ import ru.practicum.dto.output.outshort.EventShortDto;
 import ru.practicum.dto.output.outshort.LocationDto;
 import ru.practicum.dto.output.outshort.UserShortDto;
 import ru.practicum.model.Event;
+import ru.practicum.model.QRequest;
+import ru.practicum.model.enummodel.RequestStatus;
+import ru.practicum.repository.RequestRepository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static ru.practicum.dto.ContextStats.formatter;
@@ -17,6 +24,10 @@ import static ru.practicum.dto.ContextStats.formatter;
 @Component
 @RequiredArgsConstructor
 public class EventMapper {
+    private final StatsAgent statsAgent;
+
+    private final RequestRepository requestRepository;
+
     public Event fromDto(NewEventDto newEventDto) {
         return Event.builder()
                 .title(newEventDto.getTitle())
@@ -64,12 +75,13 @@ public class EventMapper {
                 .build();
     }
 
-    public List<EventShortDto> mapToEventDto(Iterable<Event> events, Map<Long, Integer> viewsEvents,
-                                            Map<Long, Integer> confirmRequests, boolean isOnlyAvailable) {
-        List<EventShortDto> target = new ArrayList<>();
+    public List<EventShortDto> mapToEventDto(Iterable<Event> events, boolean isOnlyAvailable) {
+        List<EventShortDto> target = new LinkedList<>();
+        DataByEvents data = getStatsAndConfirmRequestsByEvents(events);
+
         events.forEach(u -> {
-            EventShortDto eventShortDto = toShortDto(u, viewsEvents.getOrDefault(u.getId(), 0),
-                                                      confirmRequests.getOrDefault(u.getId(), 0));
+            EventShortDto eventShortDto = toShortDto(u, data.getViews().getOrDefault(u.getId(), 0),
+                                                     data.getConfirmRequests().getOrDefault(u.getId(), 0));
             if (!isOnlyAvailable || u.getParticipantLimit() == 0 || !u.getRequestModeration() ||
                     eventShortDto.getConfirmedRequests() < u.getParticipantLimit()) {
                 target.add(eventShortDto);
@@ -79,11 +91,43 @@ public class EventMapper {
         return target;
     }
 
-    public List<EventFullDto> mapToFullEventDto(Iterable<Event> events, Map<Long, Integer> viewsEvents,
-                                                Map<Long, Integer> confirmRequests) {
-        List<EventFullDto> target = new ArrayList<>();
-        events.forEach(u -> target.add(toFullDto(u, viewsEvents.getOrDefault(u.getId(), 0),
-                confirmRequests.getOrDefault(u.getId(), 0))));
+    public List<EventFullDto> mapToFullEventDto(Iterable<Event> events) {
+        List<EventFullDto> target = new LinkedList<>();
+        DataByEvents data = getStatsAndConfirmRequestsByEvents(events);
+
+        events.forEach(u -> target.add(toFullDto(u, data.getViews().getOrDefault(u.getId(), 0),
+                                                    data.getConfirmRequests().getOrDefault(u.getId(), 0))));
         return target;
+    }
+
+    private DataByEvents getStatsAndConfirmRequestsByEvents(Iterable<Event> events) {
+        DataByEvents data = new DataByEvents();
+
+        final LocalDateTime[] start = {LocalDateTime.now()};
+
+        List<Long> eventIds = new ArrayList<>();
+        events.forEach(u -> {
+            eventIds.add(u.getId());
+            if (u.getCreatedOn().isBefore(start[0])) {
+                start[0] = u.getCreatedOn();
+            }
+        });
+        data.setViews(statsAgent.getStatsByEventIds(eventIds, start[0], LocalDateTime.now()));
+
+        Map<Long, Integer> confirmRequests = new HashMap<>();
+        requestRepository.findAll(QRequest.request.event.id.in(eventIds)
+                         .and(QRequest.request.status.eq(RequestStatus.CONFIRMED)))
+                         .forEach(request -> confirmRequests.put(request.getEvent().getId(),
+                                  confirmRequests.getOrDefault(request.getEvent().getId(), 0) + 1));
+        data.setConfirmRequests(confirmRequests);
+
+        return data;
+    }
+
+    @Getter
+    @Setter
+    private static class DataByEvents {
+        private Map<Long, Integer> views;
+        private Map<Long, Integer> confirmRequests;
     }
 }

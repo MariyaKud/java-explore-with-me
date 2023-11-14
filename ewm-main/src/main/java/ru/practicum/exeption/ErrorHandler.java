@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.UnexpectedTypeException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -36,7 +37,8 @@ public class ErrorHandler {
             MethodArgumentNotValidException.class,
             MissingRequestHeaderException.class,
             MissingServletRequestParameterException.class,
-            UnexpectedTypeException.class
+            UnexpectedTypeException.class,
+            ConstraintViolationException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleBadRequest(final Throwable e) {

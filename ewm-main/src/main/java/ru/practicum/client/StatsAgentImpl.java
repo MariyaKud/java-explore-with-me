@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.StatsClient;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
-import ru.practicum.dto.ContextMain;
+import org.springframework.beans.factory.annotation.Value;
+
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -29,14 +30,17 @@ import static ru.practicum.dto.ContextStats.formatter;
 @Transactional
 public class StatsAgentImpl implements StatsAgent {
 
-    ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     private final StatsClient statsClient;
+
+    @Value("${app.name}:ewm-main-service")
+    private final String app = "";
 
     @Override
     public void recordStats(String ip, String uri) {
         EndpointHitDto hitDto = EndpointHitDto.builder()
-                .app(ContextMain.app)
+                .app(app)
                 .ip(ip)
                 .uri(uri)
                 .timestamp(formatter.format(LocalDateTime.now()))

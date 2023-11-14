@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.checkerframework.checker.index.qual.Positive;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import ru.practicum.client.StatsAgent;
@@ -14,6 +15,7 @@ import ru.practicum.model.enummodel.EventSort;
 import ru.practicum.service.event.PublicEventService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,20 +25,21 @@ import static ru.practicum.dto.ContextStats.formatter;
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
+@Validated
 public class EventController {
     private final PublicEventService eventService;
 
     private final StatsAgent statsAgent;
 
     @GetMapping
-    public List<EventShortDto> getEvents(@RequestParam(name = "text", defaultValue = "") String text,
-                                         @RequestParam(name = "categories", defaultValue = "") List<Long> categories,
-                                         @RequestParam(name = "paid", defaultValue = "") Boolean paid,
-                                         @RequestParam(name = "rangeStart", defaultValue = "") String rangeStart,
-                                         @RequestParam(name = "rangeEnd", defaultValue = "") String rangeEnd,
-                                         @RequestParam(name = "onlyAvailable", defaultValue = "") Boolean onlyAvailable,
-                                         @RequestParam(name = "sort", defaultValue = "") String sort,
-                                         @RequestParam(name = "from", defaultValue = "0") Integer from,
+    public List<EventShortDto> getEvents(@RequestParam(name = "text", required = false) String text,
+                                         @RequestParam(name = "categories", required = false) List<Long> categories,
+                                         @RequestParam(name = "paid", required = false) Boolean paid,
+                                         @RequestParam(name = "rangeStart", required = false) String rangeStart,
+                                         @RequestParam(name = "rangeEnd", required = false) String rangeEnd,
+                                         @RequestParam(name = "onlyAvailable", required = false) Boolean onlyAvailable,
+                                         @RequestParam(name = "sort", required = false) String sort,
+                                         @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                          @Positive @RequestParam(name = "size", defaultValue = "10") Integer size,
                                          HttpServletRequest request) {
         log.info("Get events with text {}, categories={}, paid={}, start={}, end={}, onlyAvailable={}, sort={}, " +
@@ -51,27 +54,22 @@ public class EventController {
                 .onlyAvailable(onlyAvailable)
                 .build();
 
-        if (!sort.isEmpty()) {
+        if (sort != null) {
             param.setSort(EventSort.valueOf(sort));
         }
-        if (!rangeStart.isEmpty()) {
+        if (rangeStart != null) {
             param.setRangeStart(LocalDateTime.parse(rangeStart, formatter));
         }
-        if (!rangeEnd.isEmpty()) {
+        if (rangeEnd != null) {
             param.setRangeEnd(LocalDateTime.parse(rangeEnd, formatter));
         }
 
-        if (!rangeStart.isEmpty() && !rangeEnd.isEmpty()
+        if (rangeStart != null && rangeEnd != null
                 && param.getRangeEnd().isBefore(param.getRangeStart())) {
             throw new IllegalArgumentException("Date start is after then end.");
         }
 
         List<EventShortDto> events = eventService.getEvents(param, from, size);
-
-        for (EventShortDto event : events) {
-            statsAgent.recordStats(request.getRemoteAddr(),
-                    String.join("/", "/events", Long.toString(event.getId())));
-        }
 
         statsAgent.recordStats(request.getRemoteAddr(), "/events");
 
@@ -79,7 +77,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public EventFullDto findByIdEvent(@PathVariable Long id, HttpServletRequest request) {
+    public EventFullDto findByIdEvent(@PositiveOrZero @PathVariable Long id, HttpServletRequest request) {
         log.info("Find event by id {}", id);
         log.info("client ip: {}", request.getRemoteAddr());
         log.info("endpoint path: {}", request.getRequestURI());

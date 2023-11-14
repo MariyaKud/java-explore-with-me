@@ -7,23 +7,14 @@ import ru.practicum.dto.output.CompilationDto;
 import ru.practicum.dto.output.outshort.EventShortDto;
 import ru.practicum.model.Compilation;
 import ru.practicum.model.Event;
-import ru.practicum.model.QRequest;
-import ru.practicum.model.enummodel.RequestStatus;
-import ru.practicum.repository.RequestRepository;
-import ru.practicum.client.StatsAgent;
 import ru.practicum.service.event.EventMapper;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 public class CompilationMapper {
     private final EventMapper eventMapper;
-
-    private final RequestRepository requestRepository;
-
-    private final StatsAgent statsAgent;
 
     public Compilation fromDto(NewCompilationDto newCompilationDto, Set<Event> events) {
         return Compilation.builder()
@@ -34,9 +25,7 @@ public class CompilationMapper {
     }
 
     public CompilationDto toDto(Compilation compilation) {
-        DataByEvents data = getStatsAndConfirmRequestsByEventsIds(compilation.getEvents());
-        List<EventShortDto> events = eventMapper.mapToEventDto(compilation.getEvents(),
-                data.getViews(), data.getConfirmRequests(), false);
+        List<EventShortDto> events = eventMapper.mapToEventDto(compilation.getEvents(), false);
 
         return CompilationDto.builder()
                 .id(compilation.getId())
@@ -44,36 +33,5 @@ public class CompilationMapper {
                 .pinned(compilation.getPinned())
                 .events(new HashSet<>(events))
                 .build();
-    }
-
-    private DataByEvents getStatsAndConfirmRequestsByEventsIds(Set<Event> events) {
-        DataByEvents data = new DataByEvents();
-
-        final LocalDateTime[] start = {LocalDateTime.now()};
-
-        List<Long> eventIds = new ArrayList<>();
-        events.forEach(u -> {
-            eventIds.add(u.getId());
-            if (u.getCreatedOn().isBefore(start[0])) {
-                start[0] = u.getCreatedOn();
-            }
-        });
-        data.setViews(statsAgent.getStatsByEventIds(eventIds, start[0], LocalDateTime.now()));
-
-        Map<Long, Integer> confirmRequests = new HashMap<>();
-        requestRepository.findAll(QRequest.request.event.id.in(eventIds)
-                        .and(QRequest.request.status.eq(RequestStatus.CONFIRMED)))
-                .forEach(request -> confirmRequests.put(request.getEvent().getId(),
-                        confirmRequests.getOrDefault(request.getEvent().getId(), 0) + 1));
-        data.setConfirmRequests(confirmRequests);
-
-        return data;
-    }
-
-    @Getter
-    @Setter
-    private static class DataByEvents {
-        private Map<Long, Integer> views;
-        private Map<Long, Integer> confirmRequests;
     }
 }

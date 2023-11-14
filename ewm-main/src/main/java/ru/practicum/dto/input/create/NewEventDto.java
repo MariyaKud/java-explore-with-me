@@ -5,12 +5,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import ru.practicum.dto.ContextStats;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
 
-import ru.practicum.model.Location;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
+import ru.practicum.dto.output.outshort.LocationDto;
 import ru.practicum.validation.DateAfterTwoHourFromNow;
 
 import java.time.LocalDateTime;
@@ -29,15 +28,18 @@ public class NewEventDto {
     @Size(min = 20, max = 2000)
     private String annotation;
     @Positive
+    @NotNull
     private Long category;
     @NotBlank
     @Size(min = 20, max = 7000)
     private String description;
     @JsonFormat(pattern = ContextStats.pattern)
     private LocalDateTime eventDate;
-    private Location location;
-    private Boolean paid = false;
+    @Valid
+    @NotNull
+    private LocationDto location;
+    private boolean paid;
     @PositiveOrZero
-    private Integer participantLimit = 0;
-    private Boolean requestModeration = true;
+    private int participantLimit;
+    private boolean requestModeration = true;
 }

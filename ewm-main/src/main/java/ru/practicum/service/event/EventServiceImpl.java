@@ -3,10 +3,8 @@ package ru.practicum.service.event;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,10 +12,11 @@ import org.springframework.stereotype.Service;
 
 import ru.practicum.dto.input.create.NewEventDto;
 import ru.practicum.dto.input.update.UpdateEventAdminRequest;
-import ru.practicum.dto.input.update.UpdateEventDto;
+import ru.practicum.dto.input.update.UpdateEventRequestBase;
 import ru.practicum.dto.input.update.UpdateEventUserRequest;
 import ru.practicum.dto.output.EventFullDto;
 import ru.practicum.dto.output.outshort.EventShortDto;
+import ru.practicum.dto.output.outshort.LocationDto;
 import ru.practicum.dto.param.AdminEventParam;
 import ru.practicum.dto.param.EventParam;
 import ru.practicum.exeption.NotFoundException;
@@ -129,21 +128,23 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
                     " there is less than an hour left before the start of the event", eventId));
         }
 
-        if (eventDto.getStateAction() == EventStateActionAdmin.PUBLISH_EVENT) {
-            if (event.getState() != EventState.PENDING) {
-                throw new NotMeetRulesException(String.format("You cannot publish an event (id = %s) with the status %s",
-                        eventId, event.getState()));
-            } else {
-                event.setPublishedOn(publishDate);
-                event.setState(EventState.PUBLISHED);
+        if (eventDto.isStateAction()) {
+            if (eventDto.getStateAction() == EventStateActionAdmin.PUBLISH_EVENT) {
+                if (event.getState() != EventState.PENDING) {
+                    throw new NotMeetRulesException(String.format("You cannot publish an event (id = %s) with the status %s",
+                            eventId, event.getState()));
+                } else {
+                    event.setPublishedOn(publishDate);
+                    event.setState(EventState.PUBLISHED);
+                }
             }
-        }
 
-        if (eventDto.getStateAction() == EventStateActionAdmin.REJECT_EVENT) {
-            if (event.getState() == EventState.PUBLISHED) {
-                throw new NotMeetRulesException(String.format("You cannot reject published an event (id = %s)", eventId));
-            } else {
-                event.setState(EventState.CANCELED);
+            if (eventDto.getStateAction() == EventStateActionAdmin.REJECT_EVENT) {
+                if (event.getState() == EventState.PUBLISHED) {
+                    throw new NotMeetRulesException(String.format("You cannot reject published an event (id = %s)", eventId));
+                } else {
+                    event.setState(EventState.CANCELED);
+                }
             }
         }
 
@@ -184,9 +185,8 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
 
         BooleanExpression byUserIds = QEvent.event.initiator.id.eq(userId);
         Iterable<Event> foundEvents = eventRepository.findAll(byUserIds, pageable);
-        DataByEvents data = getStatsAndConfirmRequestsByEvents(foundEvents);
 
-        return eventMapper.mapToEventDto(foundEvents, data.getViews(), data.getConfirmRequests(), false);
+        return eventMapper.mapToEventDto(foundEvents, false);
     }
 
     @Override
@@ -211,9 +211,8 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
         }
 
         Iterable<Event> foundEvents = eventRepository.findAll(builder, pageable);
-        DataByEvents data = getStatsAndConfirmRequestsByEvents(foundEvents);
 
-        return eventMapper.mapToFullEventDto(foundEvents, data.getViews(), data.getConfirmRequests());
+        return eventMapper.mapToFullEventDto(foundEvents);
     }
 
     @Override
@@ -251,9 +250,8 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
         }
 
         Iterable<Event> foundEvents = eventRepository.findAll(builder, pageable);
-        DataByEvents data = getStatsAndConfirmRequestsByEvents(foundEvents);
 
-        return eventMapper.mapToEventDto(foundEvents, data.getViews(), data.getConfirmRequests(), isOnlyAvailable);
+        return eventMapper.mapToEventDto(foundEvents, isOnlyAvailable);
     }
 
     private void enrichCategoryInEvent(Event event, Long catId) {
@@ -263,17 +261,18 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
         event.setCategory(category);
     }
 
-    private void enrichLocationInEvent(Event event, Location location) {
-        List<Location> locations = locationRepository.findByLatAndLon(location.getLat(), location.getLon());
+    private void enrichLocationInEvent(Event event, LocationDto locationDto) {
+        List<Location> locations = locationRepository.findByLatAndLon(locationDto.getLat(), locationDto.getLon());
 
         if (!locations.isEmpty()) {
             event.setLocation(locations.get(0));
         } else {
+            Location location = new Location(null, locationDto.getLat(), locationDto.getLon());
             event.setLocation(locationRepository.save(location));
         }
     }
 
-    private <T extends UpdateEventDto> void updatePropertyEvent(Event event, T eventDto) {
+    private <T extends UpdateEventRequestBase> void updatePropertyEvent(Event event, T eventDto) {
         if (eventDto.isAnnotation()) {
             event.setAnnotation(eventDto.getAnnotation());
         }
@@ -301,36 +300,5 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
         if (eventDto.isLocation()) {
             enrichLocationInEvent(event, eventDto.getLocation());
         }
-    }
-
-    private DataByEvents getStatsAndConfirmRequestsByEvents(Iterable<Event> events) {
-        DataByEvents data = new DataByEvents();
-
-        final LocalDateTime[] start = {LocalDateTime.now()};
-
-        List<Long> eventIds = new ArrayList<>();
-        events.forEach(u -> {
-            eventIds.add(u.getId());
-            if (u.getCreatedOn().isBefore(start[0])) {
-                start[0] = u.getCreatedOn();
-            }
-        });
-        data.setViews(statsAgent.getStatsByEventIds(eventIds, start[0], LocalDateTime.now()));
-
-        Map<Long, Integer> confirmRequests = new HashMap<>();
-        requestRepository.findAll(QRequest.request.event.id.in(eventIds)
-                        .and(QRequest.request.status.eq(RequestStatus.CONFIRMED)))
-                        .forEach(request -> confirmRequests.put(request.getEvent().getId(),
-                        confirmRequests.getOrDefault(request.getEvent().getId(), 0) + 1));
-        data.setConfirmRequests(confirmRequests);
-
-        return data;
-    }
-
-    @Getter
-    @Setter
-    private static class DataByEvents {
-        private Map<Long, Integer> views;
-        private Map<Long, Integer> confirmRequests;
     }
 }

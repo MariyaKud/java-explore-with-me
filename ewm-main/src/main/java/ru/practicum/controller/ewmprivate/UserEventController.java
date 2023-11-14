@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.index.qual.Positive;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.input.create.NewEventDto;
 import ru.practicum.dto.input.update.EventRequestStatusUpdateRequest;
@@ -16,12 +17,14 @@ import ru.practicum.service.event.PrivateEventService;
 import ru.practicum.service.request.PrivateRequestService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/users/{userId}/events")
 @RequiredArgsConstructor
+@Validated
 public class UserEventController {
     private final PrivateEventService eventService;
 
@@ -29,23 +32,23 @@ public class UserEventController {
 
     @GetMapping
     public List<EventShortDto> getUserEvents(@PathVariable Long userId,
-                                            @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                             @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                             @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Get events for user by id {}, from={}, size={}", userId, from, size);
         return eventService.getUserEvents(userId, from, size);
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public EventFullDto createUserEvent(@PathVariable Long userId,
-                                         @RequestBody @Valid NewEventDto newEventDto) {
+    public EventFullDto createUserEvent(@PositiveOrZero @PathVariable Long userId,
+                                        @RequestBody @Valid NewEventDto newEventDto) {
         log.info("User by id {} creating new event {}", userId, newEventDto);
         return eventService.createUserEvent(userId, newEventDto);
     }
 
     @GetMapping("/{eventId}")
-    public EventFullDto findUserEventById(@PathVariable Long userId,
-                                          @PathVariable Long eventId) {
+    public EventFullDto findUserEventById(@PositiveOrZero @PathVariable Long userId,
+                                          @PositiveOrZero @PathVariable Long eventId) {
         log.info("User by id {} find event id={}", userId, eventId);
         return eventService.findUserEventById(userId, eventId);
     }
@@ -68,7 +71,7 @@ public class UserEventController {
     @PatchMapping("/{eventId}/requests")
     public EventRequestStatusUpdateResult updateStatusRequestsForUserEvent(@PathVariable Long userId,
                                                                            @PathVariable Long eventId,
-                                          @RequestBody @Valid EventRequestStatusUpdateRequest statusRequests) {
+                                                                           @RequestBody @Valid EventRequestStatusUpdateRequest statusRequests) {
         log.info("User by id {} patch request status for event by id {}, status={}", userId, eventId, statusRequests);
         return requestService.updateStatusRequestsForUserEvent(userId, eventId, statusRequests);
     }

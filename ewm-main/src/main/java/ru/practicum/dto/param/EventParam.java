@@ -12,13 +12,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class EventParam {
-    String text;
-    List<Long> categories;
-    Boolean paid;
-    LocalDateTime rangeStart;
-    LocalDateTime rangeEnd;
-    Boolean onlyAvailable;
-    EventSort sort;
+    private String text;
+    private List<Long> categories;
+    private Boolean paid;
+    private LocalDateTime rangeStart;
+    private LocalDateTime rangeEnd;
+    private Boolean onlyAvailable;
+    private EventSort sort;
 
     public boolean isText() {
         return text != null && !text.isBlank();

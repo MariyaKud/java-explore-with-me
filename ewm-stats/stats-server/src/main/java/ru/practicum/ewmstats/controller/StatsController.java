@@ -1,6 +1,5 @@
 package ru.practicum.ewmstats.controller;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,8 +28,8 @@ public class StatsController {
 
     @GetMapping("/stats")
     public List<ViewStatsDto> getStats(
-            @NonNull @RequestParam("start") @DateTimeFormat(pattern = ContextStats.pattern) LocalDateTime startData,
-            @NonNull @RequestParam("end") @DateTimeFormat(pattern = ContextStats.pattern) LocalDateTime endData,
+            @RequestParam(name = "start") @DateTimeFormat(pattern = ContextStats.pattern) LocalDateTime startData,
+            @RequestParam(name = "end") @DateTimeFormat(pattern = ContextStats.pattern) LocalDateTime endData,
             @RequestParam(name = "uris", defaultValue = "") List<String> uris,
             @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.info("Get all stats start={}, end={} for list uri={}, unique={}", startData, endData, uris, unique);

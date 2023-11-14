@@ -14,6 +14,9 @@ public class CheckDateValidator implements ConstraintValidator<DateAfterTwoHourF
 
     @Override
     public boolean isValid(NewEventDto newEventDto, ConstraintValidatorContext constraintValidatorContext) {
+        if (newEventDto.getEventDate() == null) {
+            return false;
+        }
         return newEventDto.getEventDate().plusHours(2).isAfter(LocalDateTime.now());
     }
 }

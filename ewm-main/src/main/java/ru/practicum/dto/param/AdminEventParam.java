@@ -12,11 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class AdminEventParam {
-    List<Long> users;
-    List<EventState> states;
-    List<Long> categories;
-    LocalDateTime rangeStart;
-    LocalDateTime rangeEnd;
+    private List<Long> users;
+    private List<EventState> states;
+    private List<Long> categories;
+    private LocalDateTime rangeStart;
+    private LocalDateTime rangeEnd;
 
     public boolean isUsers() {
         return users != null && !users.isEmpty();
