@@ -5,7 +5,7 @@ import ru.practicum.dto.input.create.NewUserRequestDto;
 import ru.practicum.dto.output.UserDto;
 import ru.practicum.model.User;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -19,7 +19,7 @@ public class UserMapper {
     }
 
     public List<UserDto> mapToUserDto(Iterable<User> users) {
-        List<UserDto> target = new ArrayList<>();
+        List<UserDto> target = new LinkedList<>();
         users.forEach(u -> target.add(toDto(u)));
         return target;
     }

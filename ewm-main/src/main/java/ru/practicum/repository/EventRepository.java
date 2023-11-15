@@ -1,5 +1,9 @@
 package ru.practicum.repository;
 
+import com.querydsl.core.types.Predicate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import ru.practicum.model.Event;
@@ -13,4 +17,8 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
     Optional<Event> findByIdAndState(Long id, EventState state);
 
     Boolean existsByCategoryId(Long catId);
+
+    @EntityGraph("event-admin-comment-graph")
+    @Override
+    Page<Event> findAll(Predicate predicate, Pageable pageable);
 }

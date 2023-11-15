@@ -17,6 +17,7 @@ public class AdminEventParam {
     private List<Long> categories;
     private LocalDateTime rangeStart;
     private LocalDateTime rangeEnd;
+    private Boolean requestModeration;
 
     public boolean isUsers() {
         return users != null && !users.isEmpty();
@@ -36,5 +37,9 @@ public class AdminEventParam {
 
     public boolean isRangeEnd() {
         return rangeEnd != null;
+    }
+
+    public boolean isRequestModeration() {
+        return requestModeration != null;
     }
 }

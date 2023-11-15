@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 import ru.practicum.client.StatsAgent;
 import ru.practicum.dto.input.create.NewEventDto;
+import ru.practicum.dto.output.AdminCommentDto;
 import ru.practicum.dto.output.CategoryDto;
 import ru.practicum.dto.output.EventFullDto;
 import ru.practicum.dto.output.outshort.EventShortDto;
@@ -28,6 +29,8 @@ public class EventMapper {
 
     private final RequestRepository requestRepository;
 
+    private final AdminCommentMapper commentMapper;
+
     public Event fromDto(NewEventDto newEventDto) {
         return Event.builder()
                 .title(newEventDto.getTitle())
@@ -41,6 +44,11 @@ public class EventMapper {
     }
 
     public EventFullDto toFullDto(Event event, Integer views, Integer confirmedRequests) {
+        List<AdminCommentDto> comments = new LinkedList<>();
+        if (event.getAdminComments() != null) {
+            comments = commentMapper.mapToDto(event.getAdminComments());
+        }
+
         return EventFullDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
@@ -57,6 +65,7 @@ public class EventMapper {
                 .location(new LocationDto(event.getLocation().getLat(), event.getLocation().getLon()))
                 .views(views)
                 .confirmedRequests(confirmedRequests)
+                .adminComments(comments)
                 .build();
     }
 
@@ -75,16 +84,19 @@ public class EventMapper {
                 .build();
     }
 
-    public List<EventShortDto> mapToEventDto(Iterable<Event> events, boolean isOnlyAvailable) {
+    public List<EventShortDto> mapToEventDto(Iterable<Event> events, boolean isOnlyAvailable,
+                                             boolean isNeedModeration, List<Long> eventIdsNeedModeration) {
         List<EventShortDto> target = new LinkedList<>();
         DataByEvents data = getStatsAndConfirmRequestsByEvents(events);
 
         events.forEach(u -> {
-            EventShortDto eventShortDto = toShortDto(u, data.getViews().getOrDefault(u.getId(), 0),
-                                                     data.getConfirmRequests().getOrDefault(u.getId(), 0));
-            if (!isOnlyAvailable || u.getParticipantLimit() == 0 || !u.getRequestModeration() ||
-                    eventShortDto.getConfirmedRequests() < u.getParticipantLimit()) {
-                target.add(eventShortDto);
+            if (!isNeedModeration || eventIdsNeedModeration.contains(u.getId())) {
+                EventShortDto eventShortDto = toShortDto(u, data.getViews().getOrDefault(u.getId(), 0),
+                        data.getConfirmRequests().getOrDefault(u.getId(), 0));
+                if (!isOnlyAvailable || u.getParticipantLimit() == 0 || !u.getRequestModeration() ||
+                        eventShortDto.getConfirmedRequests() < u.getParticipantLimit()) {
+                    target.add(eventShortDto);
+                }
             }
         });
 

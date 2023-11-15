@@ -32,10 +32,12 @@ public class UserEventController {
 
     @GetMapping
     public List<EventShortDto> getUserEvents(@Positive @PathVariable Long userId,
+                                             @RequestParam(name = "isNeedModeration", required = false) boolean isNeedModeration,
                                              @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                              @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Get events for user by id {}, from={}, size={}", userId, from, size);
-        return eventService.getUserEvents(userId, from, size);
+        log.info("Get events for user by id {} filter for need moderation = {}, from={}, size={}",
+                userId, isNeedModeration, from, size);
+        return eventService.getUserEvents(userId, isNeedModeration, from, size);
     }
 
     @PostMapping

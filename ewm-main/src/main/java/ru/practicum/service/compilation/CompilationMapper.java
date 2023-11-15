@@ -25,7 +25,8 @@ public class CompilationMapper {
     }
 
     public CompilationDto toDto(Compilation compilation) {
-        List<EventShortDto> events = eventMapper.mapToEventDto(compilation.getEvents(), false);
+        List<EventShortDto> events = eventMapper.mapToEventDto(compilation.getEvents(),
+                                                   false, false, new LinkedList<>());
 
         return CompilationDto.builder()
                 .id(compilation.getId())

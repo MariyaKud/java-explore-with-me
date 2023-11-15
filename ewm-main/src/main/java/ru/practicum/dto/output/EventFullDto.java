@@ -7,6 +7,7 @@ import ru.practicum.dto.output.outshort.UserShortDto;
 import ru.practicum.model.enummodel.EventState;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,4 +31,5 @@ public class EventFullDto {
     private Boolean requestModeration;
     private EventState state;
     private Integer views;
+    private List<AdminCommentDto> adminComments;
 }

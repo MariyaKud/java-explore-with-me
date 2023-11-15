@@ -5,6 +5,7 @@ import ru.practicum.model.enummodel.EventState;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "events", schema = "public")
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@NamedEntityGraph(name = "event-admin-comment-graph", attributeNodes = {@NamedAttributeNode("adminComments")})
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,4 +54,8 @@ public class Event {
     @Column(name = "state_event", nullable = false)
     @Enumerated(EnumType.STRING)
     private EventState state;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "event_id", updatable = false, insertable = false)
+    private Set<AdminComment> adminComments;
 }
