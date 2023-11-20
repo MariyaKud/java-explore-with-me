@@ -34,10 +34,11 @@ public class AdminEventController {
                                         @RequestParam(name = "categories", required = false) List<Long> categories,
                                         @RequestParam(name = "rangeStart", required = false) String rangeStart,
                                         @RequestParam(name = "rangeEnd", required = false) String rangeEnd,
+                                        @RequestParam(name = "requestModeration", required = false) Boolean requestModeration,
                                         @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                         @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Get events for users ids {} in states={} and categories={}, start={}, end={}, from={}, size={}",
-                users, states, categories, rangeStart, rangeEnd, from, size);
+        log.info("Get events for users ids {} in states={} and categories={}, requestModeration = {}, start={}, end={}, from={}, size={}",
+                users, states, categories, requestModeration, rangeStart, rangeEnd, from, size);
 
         AdminEventParam param = AdminEventParam.builder()
                 .users(users)
@@ -54,6 +55,13 @@ public class AdminEventController {
         }
         if (rangeEnd != null) {
             param.setRangeEnd(LocalDateTime.parse(rangeEnd, formatter));
+        }
+        if (rangeStart != null && rangeEnd != null
+                && param.getRangeEnd().isBefore(param.getRangeStart())) {
+            throw new IllegalArgumentException("Date start is after then end.");
+        }
+        if (requestModeration != null) {
+            param.setRequestModeration(requestModeration);
         }
 
         return eventService.getAdminEvents(param, from, size);

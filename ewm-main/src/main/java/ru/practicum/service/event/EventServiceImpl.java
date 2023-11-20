@@ -48,6 +48,8 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
 
     private final RequestRepository requestRepository;
 
+    private final AdminCommentRepository adminCommentRepository;
+
     private final StatsAgent statsAgent;
 
     private final EventMapper eventMapper;
@@ -104,6 +106,7 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
                 }
                 case SEND_TO_REVIEW: {
                     event.setState(EventState.PENDING);
+                    setStatesAdminCommentToEvent(eventId);
                     break;
                 }
             }
@@ -180,13 +183,30 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventShortDto> getUserEvents(Long userId, Integer from, Integer size) {
+    public List<EventShortDto> getUserEvents(Long userId, boolean isNeedModeration, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from > 0 ? from / size : 0, size, Sort.by("id"));
 
-        BooleanExpression byUserIds = QEvent.event.initiator.id.eq(userId);
-        Iterable<Event> foundEvents = eventRepository.findAll(byUserIds, pageable);
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(QEvent.event.initiator.id.eq(userId));
+        if (isNeedModeration) {
+            builder.and(QEvent.event.requestModeration.eq(true));
+            builder.and(QEvent.event.state.eq(EventState.CANCELED));
+        }
 
-        return eventMapper.mapToEventDto(foundEvents, false);
+        Iterable<Event> foundEvents = eventRepository.findAll(builder, pageable);
+
+        List<Long> eventIdsNeedModeration = new LinkedList<>();
+        if (isNeedModeration) {
+            List<Long> eventIds = new LinkedList<>();
+            foundEvents.forEach(u -> eventIds.add(u.getId()));
+
+            BooleanExpression byEventIds = QAdminComment.adminComment.event.id.in(eventIds);
+            BooleanExpression byState = QAdminComment.adminComment.state.eq(CommentState.PENDING);
+            Iterable<AdminComment> comments = adminCommentRepository.findAll(byEventIds.and(byState));
+            comments.forEach(u -> eventIdsNeedModeration.add(u.getEvent().getId()));
+        }
+
+        return eventMapper.mapToEventDto(foundEvents, false, isNeedModeration, eventIdsNeedModeration);
     }
 
     @Override
@@ -208,6 +228,9 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
         }
         if (eventParam.isRangeEnd()) {
             builder.and(QEvent.event.eventDate.loe(eventParam.getRangeEnd()));
+        }
+        if (eventParam.isRequestModeration()) {
+            builder.and(QEvent.event.requestModeration.eq(eventParam.getRequestModeration()));
         }
 
         Iterable<Event> foundEvents = eventRepository.findAll(builder, pageable);
@@ -251,7 +274,7 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
 
         Iterable<Event> foundEvents = eventRepository.findAll(builder, pageable);
 
-        return eventMapper.mapToEventDto(foundEvents, isOnlyAvailable);
+        return eventMapper.mapToEventDto(foundEvents, isOnlyAvailable, false, new LinkedList<>());
     }
 
     private void enrichCategoryInEvent(Event event, Long catId) {
@@ -299,6 +322,13 @@ public class EventServiceImpl implements PrivateEventService, AdminEventService,
         }
         if (eventDto.isLocation()) {
             enrichLocationInEvent(event, eventDto.getLocation());
+        }
+    }
+
+    private void setStatesAdminCommentToEvent(Long eventId) {
+        List<AdminComment> foundComments = adminCommentRepository.findByEvent_Id(eventId);
+        for (AdminComment foundComment : foundComments) {
+            foundComment.setState(CommentState.FIXED);
         }
     }
 }
